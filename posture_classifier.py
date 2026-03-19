@@ -1,6 +1,9 @@
 import numpy as np
 import cv2
-from mediapipe.solutions.pose import PoseLandmark
+import mediapipe as mp
+
+mp_pose = mp.solutions.pose
+PoseLandmark = mp_pose.PoseLandmark
 
 class PostureClassifier:
     def __init__(self):

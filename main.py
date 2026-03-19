@@ -4,7 +4,8 @@ import csv
 import numpy as np
 from datetime import datetime
 from db import init_db, insert_log
-from app import send_alert
+# from app import send_alert
+from alerts import send_advanced_alert
 from dashboard import app as dashboard_app
 
 from detector import PersonDetector, detect_faces
@@ -19,8 +20,9 @@ from posture_classifier import DemographicsDetector
 from detectors.zone_intrusion import ZoneIntrusionDetector
 
 camera_feeds = {
-    "store_front": "data/test_videos/front.mp4",
-    "back_exit": "data/test_videos/back.mp4"
+    # "store_front": "data/test_videos/front.mp4",
+    # "back_exit": "data/test_videos/back.mp4"
+    "store_front": 0,  # Use webcam for testing
 }
 
 def process_camera(camera_id, path, user_email="recipient@example.com"):
@@ -63,7 +65,7 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
         
         if loitering_alerts:
             for alert in loitering_alerts:
-                send_alert(alert_type="loitering", details=alert)
+                send_advanced_alert("Loitering Alert", str(alert))
 
         cv2.imshow(f"Camera {camera_id}", frame)
 
@@ -238,5 +240,5 @@ def main():
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    dashboard_app.run_server(debug=True)
+    dashboard_app.run(debug=True)
     main()

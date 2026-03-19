@@ -1,10 +1,23 @@
-# YOLOv8 requirements
-# Install the required packages for YOLOv8
+# # YOLOv8 requirements
+# # Install the required packages for YOLOv8
 
-# Create a virtual environment and install the requirements
-python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
-pip install opencv-python ultralytics numpy pyyaml
+# # Create a virtual environment and install the requirements
+# python -m venv venv
+# source venv/bin/activate   # Windows: venv\Scripts\activate
+# pip install opencv-python ultralytics numpy pyyaml
+
+# opencv-python
+# opencv-python-headless
+# requests
+# ultralytics
+# numpy
+# pyyaml
+# mediapipe
+# streamlit
+# pandas
+# twilio
+# flask
+
 
 opencv-python
 opencv-python-headless
@@ -12,8 +25,10 @@ requests
 ultralytics
 numpy
 pyyaml
-mediapipe
+mediapipe==0.10.20
 streamlit
 pandas
 twilio
 flask
+eventlet
+dash
