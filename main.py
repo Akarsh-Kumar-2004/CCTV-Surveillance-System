@@ -22,7 +22,7 @@ from detectors.zone_intrusion import ZoneIntrusionDetector
 camera_feeds = {
     # "store_front": "data/test_videos/front.mp4",
     # "back_exit": "data/test_videos/back.mp4"
-    "store_front": 0,  # Use webcam for testing
+    "live_cam": 0,  # Use webcam for testing
 }
 
 def process_camera(camera_id, path, user_email="recipient@example.com"):
@@ -36,7 +36,7 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
     object_detector = ObjectDetector()
     zone_detector = ZoneIntrusionDetector()
     posture_classifier = PostureClassifier()
-    demographics_detector = DemographicsDetector()
+    # demographics_detector = DemographicsDetector()
     loitering_detector = LoiteringDetector()
     counter = LineCounter(line_position=300)
 
@@ -121,9 +121,9 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
             face_roi = frame[cy-50:cy+50, cx-50:cx+50]
 
             # Get Age and Gender predictions
-            age, gender = demographics_detector.detect_age_gender(face_roi)
-            cv2.putText(frame, f"Age: {age}, Gender: {gender}", (cx, cy - 30), 
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+            # age, gender = demographics_detector.detect_age_gender(face_roi)
+            # cv2.putText(frame, f"Age: {age}, Gender: {gender}", (cx, cy - 30), 
+            #             cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
         # Line and status info
         cv2.line(frame, (0, counter.line_y), (frame.shape[1], counter.line_y), (0, 0, 255), 2)
@@ -185,8 +185,7 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
         })
 
         if alert_text.strip():
-            send_email_alert("⚠️ Camera Alert", f"{alert_text.strip()} @ {timestamp}")
-            send_whatsapp_alert(f"⚠️ {alert_text.strip()} @ {timestamp}")
+            print(f"ALERT: {alert_text.strip()} @ {timestamp}")
         
         # Zone heatmap overlay
         zone_overlay = frame.copy()
@@ -239,6 +238,8 @@ def main():
 
     cv2.destroyAllWindows()
 
+# if __name__ == "__main__":
+#     dashboard_app.run(debug=True)
+#     main()
 if __name__ == "__main__":
-    dashboard_app.run(debug=True)
     main()
