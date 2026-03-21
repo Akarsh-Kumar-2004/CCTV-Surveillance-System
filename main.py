@@ -22,13 +22,15 @@ from detectors.zone_intrusion import ZoneIntrusionDetector
 camera_feeds = {
     # "store_front": "data/test_videos/front.mp4",
     # "back_exit": "data/test_videos/back.mp4"
-    "live_cam": 0,  # Use webcam for testing
+    "robbery_test": "data/test_videos/Robbery/Robbery001_x264.mp4"
+
 }
 
 def process_camera(camera_id, path, user_email="recipient@example.com"):
     abandoned_objects = {}  # Moved to local variable inside function
 
     cap = cv2.VideoCapture(path)
+    print(cap.isOpened())
 
     detector = PersonDetector()
     tracker = CentroidTracker()
@@ -198,6 +200,7 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
                 alpha = zone_counts[row, col] / max_count
                 overlay_color = (0, int(255 * (1 - alpha)), int(255 * alpha))  # blue to red
                 cv2.rectangle(zone_overlay, (x1, y1), (x2, y2), overlay_color, -1)
+                #live cam cv2.putText(zone_overlay, str(zone_counts[row, col]), (x1 + 10, y1 + 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
 
         frame = cv2.addWeighted(zone_overlay, 0.4, frame, 0.6, 0)
 
