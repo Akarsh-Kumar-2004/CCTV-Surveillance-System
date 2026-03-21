@@ -36,7 +36,7 @@ class PostureClassifier:
         hip_knee_dist = knees_y - hips_y
         total_height = knees_y - shoulders_y
 
-        if total_height < 0.15:
+        if total_height < 0.08:
             return "Lying"
         elif shoulder_hip_dist < 0.1 and hip_knee_dist > 0.1:
             return "Sitting"

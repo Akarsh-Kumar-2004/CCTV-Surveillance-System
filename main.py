@@ -76,7 +76,7 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
         for obj_id, points in tracker.object_history.items():
             if len(points) >= 15:
                 xs, ys = zip(*points)
-                if max(xs) - min(xs) < 10 and max(ys) - min(ys) < 10:
+                if max(xs) - min(xs) < 20 and max(ys) - min(ys) < 20:
                     inactive_objects.append(obj_id)
 
         # Face blur
@@ -202,7 +202,7 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
                 cv2.rectangle(zone_overlay, (x1, y1), (x2, y2), overlay_color, -1)
                 #live cam cv2.putText(zone_overlay, str(zone_counts[row, col]), (x1 + 10, y1 + 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
 
-        frame = cv2.addWeighted(zone_overlay, 0.4, frame, 0.6, 0)
+        frame = cv2.addWeighted(zone_overlay, 0.2, frame, 0.8, 0)
 
         cv2.imshow(f"People Flow - {camera_id}", frame)
         if cv2.waitKey(1) == ord('q'):
