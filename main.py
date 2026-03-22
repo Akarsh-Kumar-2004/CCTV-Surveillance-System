@@ -244,5 +244,13 @@ def main():
 # if __name__ == "__main__":
 #     dashboard_app.run(debug=True)
 #     main()
+# if __name__ == "__main__":
+#     main()
+
+import threading
+
 if __name__ == "__main__":
-    main()
+    t = threading.Thread(target=main)
+    t.start()
+
+    dashboard_app.run(debug=True)
