@@ -6,9 +6,6 @@ class PersonDetector:
         self.model = YOLO(model_path)
 
     def detect(self, frame):
-        # Resize frame for faster + better detection
-        frame = cv2.resize(frame, (640, 480))
-
         # Lower confidence for better detection in CCTV
         results = self.model(frame, conf=0.25)[0]
 

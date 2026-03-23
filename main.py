@@ -93,12 +93,17 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
             frame[y:y + h, x:x + w] = face_roi
 
         # Pose detection
-        pose_result = pose_detector.detect_pose(frame)
-        frame = pose_detector.draw_landmarks(frame, pose_result)
-        posture = posture_classifier.classify(pose_result.pose_landmarks) if pose_result.pose_landmarks else "Unknown"
+        postures = []
+        for (x1, y1, x2, y2) in boxes:
+            pose_result = pose_detector.detect_pose_in_roi(frame, (x1, y1, x2, y2))
+            if pose_result and pose_result.pose_landmarks:
+                posture = posture_classifier.classify(pose_result.pose_landmarks)
+                postures.append(posture)
+                # Draw landmarks
+                frame = pose_detector.draw_landmarks(frame, pose_result)
 
         # Posture alert
-        if posture == "Lying":
+        if "Lying" in postures:
             cv2.putText(frame, "ALERT: Possible Fall!", (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 3)
             alert_text += "Fall "
 
@@ -138,7 +143,7 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
         cv2.putText(frame, f"IN: {counter.count_in} | OUT: {counter.count_out}", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
         cv2.putText(frame, f"Camera: {camera_id}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
-        cv2.putText(frame, f"Posture: {posture}", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
+        cv2.putText(frame, f"Posture: {', '.join(set(postures)) if postures else 'Unknown'}", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
 
         # Object detection and abandoned object check
         object_boxes = object_detector.detect_objects(frame)
@@ -187,7 +192,7 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
             "time": timestamp,
             "in": counter.count_in,
             "out": counter.count_out,
-            "posture": posture if posture else "Unknown",
+            "posture": ', '.join(set(postures)) if postures else "Unknown",
             "alert": alert_text.strip() if alert_text else "",
             "camera_id": camera_id
         })

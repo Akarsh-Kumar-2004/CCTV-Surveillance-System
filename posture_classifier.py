@@ -9,7 +9,7 @@ class PostureClassifier:
     def __init__(self):
         self.prev_state = {}
 
-    def classify(self, landmarks, visibility_threshold=0.5):
+    def classify(self, landmarks, visibility_threshold=0.7):
         if landmarks is None:
             return "Unknown"
 
@@ -28,9 +28,22 @@ class PostureClassifier:
         if any(v is None for v in keypoints.values()):
             return "Uncertain"
 
+        # Anatomical checks
         shoulders_y = np.mean([keypoints["left_shoulder"][1], keypoints["right_shoulder"][1]])
         hips_y = np.mean([keypoints["left_hip"][1], keypoints["right_hip"][1]])
         knees_y = np.mean([keypoints["left_knee"][1], keypoints["right_knee"][1]])
+
+        # Shoulders roughly horizontal
+        if abs(keypoints["left_shoulder"][1] - keypoints["right_shoulder"][1]) > 0.05:
+            return "Invalid"
+
+        # Shoulders above hips
+        if shoulders_y >= hips_y:
+            return "Invalid"
+
+        # Hips above knees
+        if hips_y >= knees_y:
+            return "Invalid"
 
         shoulder_hip_dist = hips_y - shoulders_y
         hip_knee_dist = knees_y - hips_y

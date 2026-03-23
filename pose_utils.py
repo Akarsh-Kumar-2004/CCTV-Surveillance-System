@@ -14,6 +14,20 @@ class PoseDetector:
         result = self.pose.process(rgb)
         return result
 
+    def detect_pose_in_roi(self, frame, roi):
+        x1, y1, x2, y2 = roi
+        crop = frame[y1:y2, x1:x2]
+        if crop.size == 0:
+            return None
+        rgb = cv2.cvtColor(crop, cv2.COLOR_BGR2RGB)
+        result = self.pose.process(rgb)
+        if result.pose_landmarks:
+            # Adjust landmarks to original frame coordinates
+            for lm in result.pose_landmarks.landmark:
+                lm.x = x1 + lm.x * (x2 - x1)
+                lm.y = y1 + lm.y * (y2 - y1)
+        return result
+
     def draw_landmarks(self, frame, result):
         if result.pose_landmarks:
             mp.solutions.drawing_utils.draw_landmarks(
