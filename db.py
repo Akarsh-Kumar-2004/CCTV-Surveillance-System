@@ -28,7 +28,7 @@ def insert_log(conn, log_entry):
         log_entry["camera_id"],
         log_entry["in"],
         log_entry["out"],
-        log_entry["posture"],
+        log_entry.get("posture", "Unknown"),
         log_entry["alert"]
     ))
     conn.commit()

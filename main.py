@@ -41,10 +41,16 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
     # demographics_detector = DemographicsDetector()
     loitering_detector = LoiteringDetector()
     counter = LineCounter(line_position=300)
+    frame_skip = 2
+    frame_count = 0
 
     while True:
         ret, frame = cap.read()
-        if not ret:
+        frame_count += 1
+        if frame_count % frame_skip != 0:
+            continue
+        if not ret or frame is None:
+            print("Video ended")
             break
 
         orig_frame = frame.copy()
@@ -181,8 +187,8 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
             "time": timestamp,
             "in": counter.count_in,
             "out": counter.count_out,
-            "posture": posture,
-            "alert": alert_text.strip(),
+            "posture": posture if posture else "Unknown",
+            "alert": alert_text.strip() if alert_text else "",
             "camera_id": camera_id
         })
 
@@ -234,6 +240,7 @@ def process_camera(camera_id, path, user_email="recipient@example.com"):
     conn.close()
     
     cap.release()
+    return 
 
 def main():
     for camera_id, path in camera_feeds.items():
@@ -247,10 +254,12 @@ def main():
 # if __name__ == "__main__":
 #     main()
 
-import threading
+# import threading
 
+# if __name__ == "__main__":
+#     t = threading.Thread(target=main)
+#     t.start()
+
+#     dashboard_app.run(debug=True)
 if __name__ == "__main__":
-    t = threading.Thread(target=main)
-    t.start()
-
-    dashboard_app.run(debug=True)
+    main()
