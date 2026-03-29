@@ -3,6 +3,8 @@ import cv2
 import csv
 import numpy as np
 from datetime import datetime
+
+from ultralytics import data
 from db import init_db, insert_log
 # from app import send_alert
 from alerts import send_advanced_alert
@@ -22,7 +24,7 @@ from detectors.zone_intrusion import ZoneIntrusionDetector
 camera_feeds = {
     # "store_front": "data/test_videos/front.mp4",
     # "back_exit": "data/test_videos/back.mp4"
-    "robbery_test": "data/test_videos/Robbery/Robbery001_x264.mp4"
+    "robbery_test": "data/test_videos/RoadAccidents/RoadAccidents002_x264.mp4"
 
 }
 

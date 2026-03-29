@@ -13,7 +13,7 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 eventlet.monkey_patch()
 loitering_detector = LoiteringDetector()
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("data/test_videos/Robbery/Robbery001_x264.mp4")
 ret, frame = cap.read()
 
 if ret:
